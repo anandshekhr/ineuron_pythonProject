@@ -9,6 +9,7 @@
         <th scope="col">TITLE</th>
         <th scope="col">VIEWS</th>
         <th scope="col">URL</th>
+        <th scope="col">THUMBNAIL</th>
       </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -19,6 +20,7 @@
         <td>{{data.videoTitle}}</td>
         <td>{{data.totalViews}}</td>
         <td><a href="{{data.videoURL}}">{{data.videoURL}}</a></td>
+        <td><a href="{{data.thumbnail}}">{{data.thumbnail}}</a></td>
       </tr>
       {% endfor %}
       {% endif %}
