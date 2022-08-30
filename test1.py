@@ -49,16 +49,19 @@ def searchKeyString():
             pageSoup = bs(findChannelPage,'lxml')
             titles = pageSoup.findAll('a',id="video-title")
             views = pageSoup.findAll('span',class_="style-scope ytd-grid-video-renderer")
-            channel_details = {}
-            i = 0
-            j = 0
+            channel_details = []
+            i, j = 0, 0
             for title in titles:
-                print("Channel Details: \nVideo Title: {} \t total_views: {} \t video_url: {}".format(title.text,views[i].text,titles[j].get('href')))
+                d = {"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href')}
+                # print(d)
+                channel_details.append(d)
                 i +=2
                 j +=1
-            return render_template("home.html")
+            # print(len(channel_details))
+            return render_template("results.html",channel_details = channel_details)
         except Exception as exp:
-            return ('Exception Called', exp)
+            print('Exception Called', exp)
+            return "something went wrong"
     else:
         return render_template("home.html")
 

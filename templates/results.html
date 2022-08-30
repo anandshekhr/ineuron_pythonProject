@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Results{% endblock title %}
+{% block body %}
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">TITLE</th>
+        <th scope="col">VIEWS</th>
+        <th scope="col">URL</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      {% if channel_details|length > 0 %}
+      {% for data in channel_details %}
+      <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{data.videoTitle}}</td>
+        <td>{{data.totalViews}}</td>
+        <td><a href="{{data.videoURL}}">{{data.videoURL}}</a></td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock body %}
