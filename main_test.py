@@ -9,21 +9,20 @@ import requests, mysql, pymongo, time, os
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
-# DRIVER_PATH = os.path.join(os.getcwd(),"/static/chromedriver")
+DRIVER_PATH = r'chromedriver.exe'
 
 #linux driver path
 # GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
 # CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
 #chrome option
-chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_PATH")
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_PATH")
 
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--disable-dev-shm-usage')
-chrome_options.add_argument('--no-sandbox')
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-
+# chrome_options.add_argument('--headless')
+# chrome_options.add_argument('--disable-dev-shm-usage')
+# chrome_options.add_argument('--no-sandbox')
+# driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 
 @app.route("/",methods = ['GET'])
@@ -47,6 +46,7 @@ def searchKeyString():
     """
     if request.method == 'POST':
         try:
+            driver = webdriver.Chrome()
             searchText = request.form.get('searchtext').replace(" ","+")
             url = ("https://www.youtube.com/results?search_query={}".format(searchText))
             driver.get(url)
@@ -71,7 +71,6 @@ def searchKeyString():
                 thumb_list.append(thumb.get('src'))
             channel_details = []
             i, j = 0, 0
-            
             if len(titles) > 50:
                 for title in titles[:50]:
                     d = {"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
@@ -94,8 +93,6 @@ def searchKeyString():
     else:
         return render_template("home.html")
 
-
-
 @app.route("/aboutme", methods =['GET'])
 @cross_origin(support_credentials = True)
 def aboutMe():
@@ -103,6 +100,8 @@ def aboutMe():
 
 
 
-# if __name__ == "__main__":
-#     app.run(debug = True)
+
+
+if __name__ == "__main__":
+    app.run(debug = True)
 # searchKeyString("krishnaik")
