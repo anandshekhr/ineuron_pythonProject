@@ -12,14 +12,18 @@ CORS(app, support_credentials=True)
 # DRIVER_PATH = os.path.join(os.getcwd(),"/static/chromedriver")
 
 #linux driver path
-GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
-CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+# GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+# CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
 #chrome option
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--disable-gpu')
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_PATH")
+
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--no-sandbox')
-chrome_options.binary_location = GOOGLE_CHROME_PATH
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
 
 
 @app.route("/",methods = ['GET'])
@@ -43,7 +47,6 @@ def searchKeyString():
     """
     if request.method == 'POST':
         try:
-            driver = webdriver.Chrome(execution_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
             searchText = request.form.get('searchtext').replace(" ","+")
             url = ("https://www.youtube.com/results?search_query={}".format(searchText))
             driver.get(url)
