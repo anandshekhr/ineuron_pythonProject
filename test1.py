@@ -86,7 +86,10 @@ def searchKeyString():
 
 
 
-
+@app.route("/aboutme", methods =['GET'])
+@cross_origin(support_credentials = True)
+def aboutMe():
+    return render_template("portfolio.html")
 
 
 
