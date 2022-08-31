@@ -5,11 +5,21 @@ from flask_cors import CORS, cross_origin
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as urReq
 from selenium import webdriver
-import requests, mysql, pymongo, time
+import requests, mysql, pymongo, time, os
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
-DRIVER_PATH = r'chromedriver.exe'
+# DRIVER_PATH = os.path.join(os.getcwd(),"/static/chromedriver")
+
+#linux driver path
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
+#chrome option
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--disable-gpu')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.binary_location = GOOGLE_CHROME_PATH
 
 
 @app.route("/",methods = ['GET'])
@@ -33,7 +43,7 @@ def searchKeyString():
     """
     if request.method == 'POST':
         try:
-            driver = webdriver.Chrome()
+            driver = webdriver.Chrome(execution_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
             searchText = request.form.get('searchtext').replace(" ","+")
             url = ("https://www.youtube.com/results?search_query={}".format(searchText))
             driver.get(url)
