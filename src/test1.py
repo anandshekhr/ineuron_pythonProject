@@ -7,6 +7,9 @@ from urllib.request import urlopen as urReq
 from selenium import webdriver
 import requests, mysql, pymongo, time, os
 
+#import additional
+import mysqlquery
+
 app = Flask(__name__)
 CORS(app, support_credentials=True)
 # DRIVER_PATH = os.path.join(os.getcwd(),"/static/chromedriver")
@@ -24,6 +27,9 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--no-sandbox')
 driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
+#mysql connection for all
+mcc = mysqlquery.mysqlConnection('localhost','root','Shekhar123#')
+mcc.mydbConnect()
 
 
 @app.route("/",methods = ['GET'])
@@ -61,6 +67,8 @@ def searchKeyString():
             driver.get(channelEmbeddedURL)
             driver.execute_script("window.scrollTo(0,2000);")
             time.sleep(1)
+            dbname = mcc.createdatabase("ineuronpythonprojectdb")
+            tablename = mcc.createtablewithschema('(id int,videotitle varchar(255),totalviews varchar(255),videourl varchar(255),thumbnail varchar(255))',tablename='youtuberstable')
             findChannelPage = driver.page_source.encode('utf-8').strip()
             pageSoup = bs(findChannelPage,'lxml')
             titles = pageSoup.findAll('a',id="video-title")
@@ -71,10 +79,13 @@ def searchKeyString():
                 thumb_list.append(thumb.get('src'))
             channel_details = []
             i, j = 0, 0
-            
             if len(titles) > 50:
                 for title in titles[:50]:
                     d = {"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
+                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    print(dtable)
+                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    print(insertintotable)
                     channel_details.append(d)
                     i +=2
                     j +=1
@@ -84,6 +95,9 @@ def searchKeyString():
                 for title in titles:
                     d = {"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
                     channel_details.append(d)
+                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values=dtable)
+                    print(insertintotable)
                     i +=2
                     j +=1
                 # print(len(channel_details))
@@ -94,15 +108,7 @@ def searchKeyString():
     else:
         return render_template("home.html")
 
-
-
 @app.route("/aboutme", methods =['GET'])
 @cross_origin(support_credentials = True)
 def aboutMe():
     return render_template("portfolio.html")
-
-
-
-# if __name__ == "__main__":
-#     app.run(debug = True)
-# searchKeyString("krishnaik")

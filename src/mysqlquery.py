@@ -43,7 +43,7 @@ class mysqlConnection:
             self.cursor.execute('use {}'.format(dbname))
             return True
         
-        except MySQLInterfaceError:
+        except:
             self.cursor.execute('use {}'.format(dbname))
             return ("Existed",True)
         
@@ -59,9 +59,10 @@ class mysqlConnection:
         """
         try:
             self.cursor.execute('create table {} {}'.format(tablename,args))
+            self.mydb.commit()
             return True
-        except MySQLInterfaceError as err:
-            return ("Something went wrong",err)
+        except:
+            return ("Something went wrong")
     
     def drop(self,dbname = None,tname = None):
         """
@@ -77,14 +78,14 @@ class mysqlConnection:
             try:
                 self.cursor.execute("drop database {}".format(dbname))
                 return True
-            except MySQLInterfaceError:
+            except:
                 return "Database does not exists"
         
         elif tname is not None:
             try:
                 self.cursor.execute("drop table IF EXISTS {} RESTRICT".format(tname))
                 return True
-            except MySQLInterfaceError:
+            except:
                 return "Table does not exists"
         else:
             pass
@@ -103,8 +104,8 @@ class mysqlConnection:
             self.mydb.commit()
             return True
         
-        except MySQLInterfaceError as err:
-            return ("Something went wrong",err)
+        except:
+            return ("Something went wrong")
     
     def mysqlcommands(self,command: str):
         """
@@ -119,5 +120,5 @@ class mysqlConnection:
             self.mydb.commit()
             return True
         
-        except MySQLInterfaceError as err:
-            return ("Something went wrong",err)
+        except:
+            return ("Something went wrong")
