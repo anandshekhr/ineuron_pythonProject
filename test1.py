@@ -71,8 +71,8 @@ def searchKeyString():
             driver.get(channelEmbeddedURL)
             driver.execute_script("window.scrollTo(0,2000);")
             time.sleep(1)
-            dbname = mcc.createdatabase("ineuronpythonprojectdb")
-            tablename = mcc.createtablewithschema('(id int,videotitle varchar(255),totalviews varchar(255),videourl varchar(255),thumbnail varchar(255))',tablename='youtuberstable')
+            # dbname = mcc.createdatabase("ineuronpythonprojectdb")
+            # tablename = mcc.createtablewithschema('(id int,videotitle varchar(255),totalviews varchar(255),videourl varchar(255),thumbnail varchar(255))',tablename='youtuberstable')
             findChannelPage = driver.page_source.encode('utf-8').strip()
             pageSoup = bs(findChannelPage,'lxml')
             titles = pageSoup.findAll('a',id="video-title")
@@ -86,8 +86,8 @@ def searchKeyString():
             if chName == "krish naik" or chName == "Krish Naik":
                 for title in titles[:50]:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j+1]}
-                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
-                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    # insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
                     channel_details.append(d)
                     i +=2
                     j +=1
@@ -97,8 +97,8 @@ def searchKeyString():
             elif len(titles) > 50:
                 for title in titles[:50]:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
-                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
-                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    # insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
                     channel_details.append(d)
                     i +=2
                     j +=1
@@ -108,8 +108,8 @@ def searchKeyString():
                 for title in titles:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
                     channel_details.append(d)
-                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
-                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values=dtable)
+                    # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    # insertintotable = mcc.insertintotable(tablename='youtuberstable',values=dtable)
                     # print(insertintotable)
                     i +=2
                     j +=1
