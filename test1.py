@@ -112,8 +112,8 @@ def searchKeyString():
             elif len(titles) > 50:
                 for title in titles[:50]:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
-                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
-                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    # insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
                     details.insert_one(d)
                     channel_details.append(d)
                     i +=2
@@ -153,7 +153,7 @@ def videoCommentsDetails():
             title = request.args.get('videotitle')
             yobj = ytube_api(link=vURL,apikey=api_key)
             datas = yobj.extractfromresponses()
-            context = {'channel':channel,'title':title,'datas':datas}
+            # context = {'channel':channel,'title':title,'datas':datas}
             return render_template("vdetailing_page.html",datas=datas,title=title,channel=channel)
         except:
             return "something went wrong"
