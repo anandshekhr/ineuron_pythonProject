@@ -10,7 +10,7 @@ import requests, mysql, pymongo, time, os
 #import additional
 from src import mysqlquery
 from src.youtube_api.videoDetails import ytube_api
-import psycopg2
+
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
