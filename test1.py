@@ -10,6 +10,7 @@ import requests, mysql, pymongo, time, os
 #import additional
 from src import mysqlquery
 from src.youtube_api.videoDetails import ytube_api
+import psycopg2
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -29,11 +30,24 @@ chrome_options.add_argument('--no-sandbox')
 driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 #mysql connection for all
-mcc = mysqlquery.mysqlConnection('localhost','root','Shekhar123#')
-mcc.mydbConnect()
+# mcc = mysqlquery.mysqlConnection('localhost','root','Shekhar123#')
+# mcc.mydbConnect()
 
 #api_key youtube developer
 api_key = "AIzaSyC7dDNkWQpzsfqMgzVcf9AU2vqW4hkgTkg"
+
+
+#mongodb client
+mymongoclient = pymongo.MongoClient('mongodb+srv://shekharanand:shekhar123@cluster0.hggw6.mongodb.net/?retryWrites=true&w=majority')
+mydb = mymongoclient.get_database('ineuronproject_db')
+details = mydb.video_details
+
+
+
+#
+# DATABASE_URL = os.environ.get(‘DATABASE_URL’)
+# con = psycopg2.connect(DATABASE_URL)
+# cur = con.cursor()
 
 @app.route("/",methods = ['GET'])
 @cross_origin(support_credentials = True)
@@ -88,6 +102,7 @@ def searchKeyString():
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j+1]}
                     # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
                     # insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    details.insert_one(d)
                     channel_details.append(d)
                     i +=2
                     j +=1
@@ -97,8 +112,9 @@ def searchKeyString():
             elif len(titles) > 50:
                 for title in titles[:50]:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
-                    # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
-                    # insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
+                    insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
+                    details.insert_one(d)
                     channel_details.append(d)
                     i +=2
                     j +=1
@@ -110,6 +126,7 @@ def searchKeyString():
                     channel_details.append(d)
                     # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
                     # insertintotable = mcc.insertintotable(tablename='youtuberstable',values=dtable)
+                    details.insert_one(d)
                     # print(insertintotable)
                     i +=2
                     j +=1
@@ -136,7 +153,7 @@ def videoCommentsDetails():
             title = request.args.get('videotitle')
             yobj = ytube_api(link=vURL,apikey=api_key)
             datas = yobj.extractfromresponses()
-            # context = {'channel':channel,'title':title,'datas':datas}
+            context = {'channel':channel,'title':title,'datas':datas}
             return render_template("vdetailing_page.html",datas=datas,title=title,channel=channel)
         except:
             return "something went wrong"
