@@ -38,7 +38,7 @@ api_key = "AIzaSyC7dDNkWQpzsfqMgzVcf9AU2vqW4hkgTkg"
 
 
 #mongodb client
-mymongoclient = pymongo.MongoClient('mongodb+srv://shekharanand:shekhar123@cluster0.hggw6.mongodb.net/?retryWrites=true&w=majority')
+mymongoclient = pymongo.MongoClient('MONGODB_URI')
 mydb = mymongoclient.get_database('ineuronproject_db')
 details = mydb.video_details
 
