@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Video Details{% endblock title %}
+{% block body %}
+<div class="container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Channel Name</th>
+          <th scope="col">Video Name</th>
+          <th scope="col">Author Name</th>
+          <th scope="col">Comment</th>
+          <th scope="col">Likes</th>
+          <th scope="col">Replies</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% if datas|length > 0 %}
+        {% for data in datas %}
+        <tr>
+          <th scope="row">{{loop.index}}</th>
+          <td>{{channel}}</td>
+          <td>{{title}}</td>
+          <td>{{data.authorname}}</td>
+          <td>{{data.comment}}</td>
+          <td>{{data.likes}}</td>
+          <td>{{data.replies}}</td>        
+        </tr>
+        {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+
+
+
+
+
+
+{% endblock body %}
+
+
+
+
+
+
+
+

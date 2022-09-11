@@ -6,10 +6,12 @@
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">CH. NAME</th>
         <th scope="col">TITLE</th>
         <th scope="col">VIEWS</th>
         <th scope="col">URL</th>
         <th scope="col">THUMBNAIL</th>
+        <th scope="col">ACTION</th>
       </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -17,10 +19,14 @@
       {% for data in channel_details %}
       <tr>
         <th scope="row">{{loop.index}}</th>
+        <td>{{data.channelName}}</td>
         <td>{{data.videoTitle}}</td>
         <td>{{data.totalViews}}</td>
         <td><a href="{{data.videoURL}}">{{data.videoURL}}</a></td>
-        <td><a href="{{data.thumbnail}}">{{data.thumbnail}}</a></td>
+        <td><a href="{{data.thumbnail}}">ThumbnailLink</a></td>
+        <td>
+          <a href="/getvideodetails?chname={{data.channelName}}&videotitle={{data.videoTitle}}&url={{data.videoURL}}" type="button" class="btn btn-outline-dark btn-sm mx-1">Get Comments</button>
+        </td>
       </tr>
       {% endfor %}
       {% endif %}

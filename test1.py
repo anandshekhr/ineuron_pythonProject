@@ -7,15 +7,26 @@ from urllib.request import urlopen as urReq
 from selenium import webdriver
 import requests, mysql, pymongo, time, os
 
-#import additional Libraries
+#import additional
 from src import mysqlquery
 from src.youtube_api.videoDetails import ytube_api
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
-DRIVER_PATH = r'chromedriver.exe'
+# DRIVER_PATH = os.path.join(os.getcwd(),"/static/chromedriver")
 
-# driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+#linux driver path
+# GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+# CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
+#chrome option
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_PATH")
+
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.add_argument('--no-sandbox')
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 #mysql connection for all
 mcc = mysqlquery.mysqlConnection('localhost','root','Shekhar123#')
@@ -23,7 +34,6 @@ mcc.mydbConnect()
 
 #api_key youtube developer
 api_key = "AIzaSyC7dDNkWQpzsfqMgzVcf9AU2vqW4hkgTkg"
-
 
 @app.route("/",methods = ['GET'])
 @cross_origin(support_credentials = True)
@@ -46,7 +56,6 @@ def searchKeyString():
     """
     if request.method == 'POST':
         try:
-            driver = webdriver.Chrome()
             chName = request.form.get('searchtext')
             searchText = chName.replace(" ","+")
             url = ("https://www.youtube.com/results?search_query={}".format(searchText))
@@ -117,8 +126,6 @@ def searchKeyString():
 def aboutMe():
     return render_template("portfolio.html")
 
-
-
 @app.route("/getvideodetails",methods = ['GET','POST'])
 @cross_origin(supports_credentials=True)
 def videoCommentsDetails():
@@ -133,13 +140,3 @@ def videoCommentsDetails():
             return render_template("vdetailing_page.html",datas=datas,title=title,channel=channel)
         except:
             return "something went wrong"
-        
-    
-
-
-
-
-
-if __name__ == "__main__":
-    app.run(debug = True)
-# searchKeyString("krishnaik")

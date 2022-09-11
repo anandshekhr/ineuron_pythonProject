@@ -62,7 +62,7 @@ class mysqlConnection:
             self.mydb.commit()
             return True
         except:
-            return ("Something went wrong")
+            return ("something went wrong in MySQL")
     
     def drop(self,dbname = None,tname = None):
         """
@@ -105,7 +105,7 @@ class mysqlConnection:
             return True
         
         except:
-            return ("Something went wrong")
+            return ("something went wrong in MySQL")
     
     def mysqlcommands(self,command: str):
         """
@@ -121,4 +121,4 @@ class mysqlConnection:
             return True
         
         except:
-            return ("Something went wrong")
+            return ("something went wrong in MySQL")
