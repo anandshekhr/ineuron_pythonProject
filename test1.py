@@ -92,14 +92,15 @@ def searchKeyString():
             titles = pageSoup.findAll('a',id="video-title")
             views = pageSoup.findAll('span',class_="style-scope ytd-grid-video-renderer")
             thumbnail = pageSoup.findAll('img',class_="style-scope yt-img-shadow")
-            thumb_list = []
-            for thumb in thumbnail[6:]:
-                thumb_list.append(thumb.get('src'))
+            
             channel_details = []
             i, j = 0, 0
             if chName == "krish naik" or chName == "Krish Naik":
+                thumb_list = []
+                for thumb in thumbnail[7:]:
+                    thumb_list.append(thumb.get('src'))
                 for title in titles[:50]:
-                    d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j+1]}
+                    d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
                     # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
                     # insertintotable = mcc.insertintotable(tablename='youtuberstable',values = dtable)
                     details.insert_one(d)
@@ -110,6 +111,9 @@ def searchKeyString():
                 return render_template("results.html",channel_details = channel_details)
             
             elif len(titles) > 50:
+                thumb_list = []
+                for thumb in thumbnail[6:]:
+                    thumb_list.append(thumb.get('src'))
                 for title in titles[:50]:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
                     # dtable = "({},'{}','{}','https://www.youtube.com{}','{}')".format(j,title.text,views[i].text,title.get('href'),thumb_list[j])
@@ -121,6 +125,9 @@ def searchKeyString():
                 # print(len(channel_details))
                 return render_template("results.html",channel_details = channel_details)
             else:
+                thumb_list = []
+                for thumb in thumbnail[6:]:
+                    thumb_list.append(thumb.get('src'))
                 for title in titles:
                     d = {"channelName":chName,"videoTitle":title.text,"totalViews":views[i].text,"videoURL":"https://www.youtube.com"+title.get('href'),"thumbnail":thumb_list[j]}
                     channel_details.append(d)
